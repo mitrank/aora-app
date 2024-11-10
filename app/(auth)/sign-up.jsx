@@ -6,6 +6,7 @@ import { Link, router } from "expo-router";
 import { images } from "../../constants";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { createUser } from "../../lib/appwrite";
+import { useGlobalContext } from "../../context/GlobalProvider";
 
 const SignUp = () => {
   const [form, setForm] = useState({
@@ -14,18 +15,22 @@ const SignUp = () => {
     password: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { setUser, setIsLoggedIn } = useGlobalContext();
 
-  const submitForm = () => {
+
+  const submitForm = async () => {
     if (!form.email || !form.password || !form.username) {
       Alert.alert('Error', 'Please fill in all the fields!')
     }
+    
     setIsSubmitting(true);
 
     try {
       const result = createUser(form.email, form.password, form.username)
+      setUser(result);
+      setIsLoggedIn(true);
       
-      // create a global context and store it later
-      
+      Alert.alert("Success", "Registration successful!");
       router.replace('/home')
     } catch (error) {
       Alert.alert('Error', error.message)
