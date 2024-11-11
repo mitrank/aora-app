@@ -1,6 +1,7 @@
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { icons } from "../constants";
+import { ResizeMode, Video } from "expo-av";
 
 const VideoCard = ({
   video: {
@@ -46,7 +47,24 @@ const VideoCard = ({
       </View>
 
       {play ? (
-        <Text>playing...</Text>
+        <Video
+          source={{ uri: video }}
+          // className="w-full h-60 rounded-xl mt-3"  // className property isnt working with Video element of expo-av
+          style={{
+            width: "100%", // w-52 in Tailwind (52 * 4 px)
+            height: 240, // h-72 in Tailwind (72 * 4 px)
+            borderRadius: 12, // rounded-xl (0.75 * 16 px)
+            marginTop: 12, // mt-3 (3 * 4 px)
+          }}
+          resizeMode={ResizeMode.CONTAIN}
+          useNativeControls
+          shouldPlay
+          onPlaybackStatusUpdate={(status) => {
+            if (status.didJustFinish) {
+              setPlay(false);
+            }
+          }}
+        />
       ) : (
         <TouchableOpacity
           activeOpacity={0.7}
