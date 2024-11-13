@@ -23,10 +23,11 @@ const Create = () => {
 
   const openPicker = async (fileType) => {
     // Request permissions
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    const permissionResult =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (permissionResult.granted === false) {
-      Alert.alert('Permission to access documents is required!');
+      Alert.alert("Permission to access documents is required!");
       return;
     }
 
@@ -45,7 +46,6 @@ const Create = () => {
       }
 
       if (fileType === "video") {
-        console.log(result.assets[0].uri)
         setForm({ ...form, video: result.assets[0] });
       }
     } else {
@@ -97,30 +97,38 @@ const Create = () => {
           <Text className="text-base text-gray-100 font-pmedium">
             Upload Video
           </Text>
-          {form.video ? (
-            <Video
-              source={{ uri: form.video.uri }}
-              className="w-full h-64 rounded-2xl"
-              resizeMode={ResizeMode.COVER}
-            />
-          ) : (
-            <View className="w-full h-40 px-4 bg-black-100 rounded-2xl justify-center items-center">
-              <TouchableOpacity onPress={() => openPicker("video")}>
-                <View className="w-14 h-14 border border-dashed border-secondary-100 justify-center items-center">
-                  <Image
-                    source={icons.upload}
-                    resizeMode="contain"
-                    className="w-1/2 h-1/2"
-                  />
-                </View>
-              </TouchableOpacity>
-            </View>
-          )}
+
+          <TouchableOpacity onPress={() => openPicker("video")}>
+            {form.video ? (
+              <Video
+                source={{ uri: form.video.uri }}
+                // className="w-full h-64 rounded-2xl"
+                style={{
+                  width: "100%",
+                  height: 256, // 16rem
+                  borderRadius: 16, // 1rem
+                }}
+                resizeMode={ResizeMode.CONTAIN}
+              />
+            ) : (
+              <View className="w-full h-40 px-4 bg-black-100 rounded-2xl justify-center items-center">
+                <TouchableOpacity onPress={() => openPicker("video")}>
+                  <View className="w-14 h-14 border border-dashed border-secondary-100 justify-center items-center">
+                    <Image
+                      source={icons.upload}
+                      resizeMode="contain"
+                      className="w-1/2 h-1/2"
+                    />
+                  </View>
+                </TouchableOpacity>
+              </View>
+            )}
+          </TouchableOpacity>
         </View>
 
         <View className="mt-7 space-y-2">
           <Text className="text-base text-gray-100 font-pmedium">
-            Thumbnai Image
+            Thumbnail Image
           </Text>
 
           <TouchableOpacity onPress={() => openPicker("image")}>
