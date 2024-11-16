@@ -1,15 +1,14 @@
 import {
-  View,
-  Text,
   FlatList,
   TouchableOpacity,
   ImageBackground,
   Image,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import * as Animatable from "react-native-animatable";
 import { icons } from "../constants";
 import { ResizeMode, Video } from "expo-av";
+import CarouselIndicator from "./CarouselIndicator";
 
 const zoomIn = {
   0: { scale: 0.85 },
@@ -23,7 +22,7 @@ const zoomOut = {
 
 const TrendingItem = ({ activeItem, item }) => {
   const [play, setPlay] = useState(false);
-  
+
   return (
     <Animatable.View
       className="mr-5"
@@ -35,18 +34,18 @@ const TrendingItem = ({ activeItem, item }) => {
           source={{ uri: item.video }}
           // className="w-52 h-72 rounded-[35px] mt-3 bg-white/10"  // className property isnt working with Video element of expo-av
           style={{
-            width: 208,            // w-52 in Tailwind (52 * 4 px)
-            height: 288,           // h-72 in Tailwind (72 * 4 px)
-            borderRadius: 25,      // rounded-[35px]
-            marginTop: 12,         // mt-3 (3 * 4 px)
-            backgroundColor: 'rgba(255, 255, 255, 0.1)',  // bg-white/10 (white with 10% opacity)
+            width: 208, // w-52 in Tailwind (52 * 4 px)
+            height: 288, // h-72 in Tailwind (72 * 4 px)
+            borderRadius: 25, // rounded-[35px]
+            marginTop: 12, // mt-3 (3 * 4 px)
+            backgroundColor: "rgba(255, 255, 255, 0.1)", // bg-white/10 (white with 10% opacity)
           }}
           resizeMode={ResizeMode.CONTAIN}
           useNativeControls
           shouldPlay
           onPlaybackStatusUpdate={(status) => {
             if (status.didJustFinish) {
-              setPlay(false)
+              setPlay(false);
             }
           }}
         />
@@ -73,28 +72,37 @@ const TrendingItem = ({ activeItem, item }) => {
 };
 
 const Trending = ({ posts }) => {
-  const [activeItem, setActiveItem] = useState(posts[1]);
+  const [activeItem, setActiveItem] = useState(posts[posts.length / 2 + 1]);
 
   const viewableItemsChanged = ({ viewableItems }) => {
-    if(viewableItems.length > 0) {
-      setActiveItem(viewableItems[0].key)
+    if (viewableItems.length > 0) {
+      setActiveItem(viewableItems[0].key);
     }
-  }
+  };
 
   return (
-    <FlatList
-      data={posts}
-      keyExtractor={(item) => item.$id}
-      renderItem={({ item }) => (
-        <TrendingItem activeItem={activeItem} item={item} />
-      )}
-      onViewableItemsChanged={viewableItemsChanged}
-      viewabilityConfig={{
-        itemVisiblePercentThreshold: 70
-      }}
-      contentOffset={{ x: 170 }}
-      horizontal
-    />
+    <>
+      <FlatList
+        data={posts}
+        keyExtractor={(item) => item.$id}
+        renderItem={({ item }) => (
+          <TrendingItem activeItem={activeItem} item={item} />
+        )}
+        onViewableItemsChanged={viewableItemsChanged}
+        viewabilityConfig={{
+          itemVisiblePercentThreshold: 100,
+        }}
+        contentOffset={{ x: 110 }}
+        horizontal
+        pagingEnabled
+        showsHorizontalScrollIndicator={false}
+        bounces={false}
+        snapToAlignment="center"
+        scrollEventThrottle={32}
+      />
+
+      <CarouselIndicator data={posts} activeItem={activeItem} />
+    </>
   );
 };
 
