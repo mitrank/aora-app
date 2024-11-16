@@ -35,7 +35,7 @@ const Bookmark = () => {
               </Text>
             </View>
 
-            <SearchInput placeholder="Search your saved videos..." />
+            <SearchInput placeholder="Search your saved videos..." searchDocType="saved" />
           </View>
         )}
         ListEmptyComponent={() => (

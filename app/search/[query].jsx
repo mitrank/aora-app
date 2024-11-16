@@ -10,8 +10,8 @@ import VideoCard from "../../components/VideoCard";
 import { useLocalSearchParams } from "expo-router";
 
 const Search = () => {
-  const { query } = useLocalSearchParams();
-  const { data: posts, refetch } = useAppwrite(() => searchPosts(query));
+  const { query, type } = useLocalSearchParams();
+  const { data: posts, refetch } = useAppwrite(() => type === "saved" ? searchSavedPosts(query) : searchPosts(query) ); // searchSavedPosts function to be implemented
 
   useEffect(() => {
     refetch();

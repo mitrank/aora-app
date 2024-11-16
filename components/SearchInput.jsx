@@ -8,6 +8,7 @@ const SearchInput = ({
   placeholder,
   textStyles,
   containerStyles,
+  searchDocType = "general"
 }) => {
   const pathName = usePathname();
   const [query, setQuery] = useState("");
@@ -33,7 +34,7 @@ const SearchInput = ({
           }
           if (pathName.startsWith("/search")) {
             router.setParams({ query });
-          } else router.push(`/search/${query}`);
+          } else router.push(`/search/${query}?type=${searchDocType}`);
           setQuery("")
         }}
       >
