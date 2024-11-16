@@ -1,10 +1,9 @@
 import { View, Text, TouchableOpacity, Image } from "react-native";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FlatList } from "react-native";
-import SearchInput from "../../components/SearchInput";
 import EmptyState from "../../components/EmptyState";
-import { getUserPosts, performSignOut, searchPosts } from "../../lib/appwrite";
+import { getUserPosts, performSignOut } from "../../lib/appwrite";
 import { useAppwrite } from "../../lib/useAppwrite";
 import VideoCard from "../../components/VideoCard";
 import { useGlobalContext } from "../../context/GlobalProvider";
@@ -73,7 +72,11 @@ const Profile = () => {
           </View>
         )}
         ListEmptyComponent={() => (
-          <EmptyState title="No Videos Found" subTitle="" />
+          <EmptyState
+            title="No Videos Found"
+            buttonTitle="Create Video"
+            handlePressButtonRoute="/create"
+          />
         )}
       />
     </SafeAreaView>

@@ -14,12 +14,12 @@ import { useGlobalContext } from "../../context/GlobalProvider";
 const Home = () => {
   const { user } = useGlobalContext();
   const [refreshing, setRefreshing] = useState(false);
-  const { data: posts, refetch } = useAppwrite(getAllPosts)
-  const { data: latestPosts} = useAppwrite(getLatestPosts)
+  const { data: posts, refetch } = useAppwrite(getAllPosts);
+  const { data: latestPosts } = useAppwrite(getLatestPosts);
 
   const onRefresh = async () => {
     setRefreshing(true);
-    await refetch()
+    await refetch();
     setRefreshing(false);
   };
 
@@ -28,9 +28,7 @@ const Home = () => {
       <FlatList
         data={posts}
         keyExtractor={(item) => item.$id}
-        renderItem={({ item }) => (
-          <VideoCard video={item} />
-        )}
+        renderItem={({ item }) => <VideoCard video={item} />}
         ListHeaderComponent={() => (
           <View className="my-6 px-4 space-y-6">
             <View className="flex-row justify-between items-start mb-6">
@@ -51,7 +49,7 @@ const Home = () => {
               </View>
             </View>
 
-            <SearchInput />
+            <SearchInput placeholder="Search for a video topic..." />
 
             <View className="w-full flex-1 pt-5 pb-8">
               <Text className="text-lg text-gray-100 font-pregular mb-3">
@@ -65,6 +63,8 @@ const Home = () => {
           <EmptyState
             title="No Videos Found"
             subTitle="Be the first one to upload a video!"
+            buttonTitle="Create Video"
+            handlePressButtonRoute="/create"
           />
         )}
         refreshControl={
