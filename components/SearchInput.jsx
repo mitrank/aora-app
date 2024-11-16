@@ -8,7 +8,6 @@ const SearchInput = ({
   placeholder,
   textStyles,
   containerStyles,
-  onPress = () => {},
 }) => {
   const pathName = usePathname();
   const [query, setQuery] = useState("");
@@ -41,7 +40,6 @@ const SearchInput = ({
           source={icons.search}
           className=" w-5 h-5"
           resizeMode="contain"
-          onPress={onPress}
         />
       </TouchableOpacity>
     </View>
