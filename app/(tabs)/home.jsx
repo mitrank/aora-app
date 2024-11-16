@@ -1,5 +1,5 @@
 import { View, Text, Image, RefreshControl, Alert } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FlatList } from "react-native";
 import { images } from "../../constants";

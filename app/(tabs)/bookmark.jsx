@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SearchInput from "../../components/SearchInput";
 import VideoCard from "../../components/VideoCard";
-import { images } from "../../constants";
 import { RefreshControl } from "react-native";
 import { useAppwrite } from "../../lib/useAppwrite";
 import { getAllPosts } from "../../lib/appwrite";
