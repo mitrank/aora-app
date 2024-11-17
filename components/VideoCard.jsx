@@ -2,6 +2,8 @@ import { View, Text, Image, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { icons } from "../constants";
 import { ResizeMode, Video } from "expo-av";
+import CustomDropdown from "./CustomDropdown";
+import { FontAwesome } from "@expo/vector-icons";
 
 const VideoCard = ({
   video: {
@@ -12,9 +14,23 @@ const VideoCard = ({
   },
 }) => {
   const [play, setPlay] = useState(false);
+  const [isShowMenu, setIsShowMenu] = useState(false);
+
+  const data = [
+    {
+      label: "Save",
+      id: "save",
+      icon: <FontAwesome name="bookmark" size={16} color="#FF9C01" />,
+    },
+    {
+      label: "Discard",
+      id: "discard",
+      icon: <FontAwesome name="remove" size={16} color="#FF9C01" />,
+    },
+  ];
 
   return (
-    <View className="flex-col items-center px-4 mb-14">
+    <View className="flex-col items-center px-4 mb-14 relative">
       <View className="flex-row gap-3 items-start">
         <View className="justify-center items-center flex-row flex-1">
           <View className="w-[46px] h-[46px] rounded-full justify-center items-center p-0.5">
@@ -42,7 +58,22 @@ const VideoCard = ({
         </View>
 
         <View className="pt-2">
-          <Image source={icons.menu} className="w-5 h-5" resizeMode="contain" />
+          <TouchableOpacity onPress={() => setIsShowMenu(!isShowMenu)}>
+            <Image
+              source={icons.menu}
+              className="w-5 h-5"
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
+          {isShowMenu && (
+            <CustomDropdown
+              isOpen={isShowMenu}
+              isOpenChange={setIsShowMenu}
+              data={data}
+              customStyles="absolute -left-28 z-10 w-28 rounded-lg bg-primary border border-secondary-100"
+              labelStyles="text-white"
+            />
+          )}
         </View>
       </View>
 
