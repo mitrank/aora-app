@@ -1,18 +1,29 @@
 import { View, Text, ScrollView, FlatList, Image } from "react-native";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SearchInput from "../../components/SearchInput";
 import VideoCard from "../../components/VideoCard";
 import { RefreshControl } from "react-native";
 import { useAppwrite } from "../../lib/useAppwrite";
-import { getAllPosts } from "../../lib/appwrite";
+import { getSavedPosts } from "../../lib/appwrite";
 import { useGlobalContext } from "../../context/GlobalProvider";
 import EmptyState from "../../components/EmptyState";
+import { useFocusEffect } from "expo-router";
 
 const Bookmark = () => {
   const { user } = useGlobalContext();
   const [refreshing, setRefreshing] = useState(false);
-  const { data: posts, refetch } = useAppwrite(getAllPosts);
+  const { data: posts, refetch } = useAppwrite(() => getSavedPosts(user.$id));
+
+  useFocusEffect(
+    useCallback(() => {
+      const performRefresh = async () => {
+        await refetch();
+      };
+
+      performRefresh();
+    }, [])
+  );
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -23,8 +34,7 @@ const Bookmark = () => {
   return (
     <SafeAreaView className="bg-primary h-full">
       <FlatList
-        data={[]}
-        // data={posts}
+        data={posts}
         keyExtractor={(item) => item.$id}
         renderItem={({ item }) => <VideoCard video={item} />}
         ListHeaderComponent={() => (
@@ -35,7 +45,10 @@ const Bookmark = () => {
               </Text>
             </View>
 
-            <SearchInput placeholder="Search your saved videos..." searchDocType="saved" />
+            <SearchInput
+              placeholder="Search your saved videos..."
+              searchDocType="saved"
+            />
           </View>
         )}
         ListEmptyComponent={() => (

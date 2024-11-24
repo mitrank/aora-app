@@ -1,33 +1,40 @@
-import { View, Text, Image, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
+import { View, Text, Image, TouchableOpacity, Alert } from "react-native";
+import React, { useEffect, useState } from "react";
 import { icons } from "../constants";
 import { ResizeMode, Video } from "expo-av";
-import CustomDropdown from "./CustomDropdown";
 import { FontAwesome } from "@expo/vector-icons";
+import { checkPostAlreadySaved, savePost, unSavePost } from "../lib/appwrite";
+import { useGlobalContext } from "../context/GlobalProvider";
 
 const VideoCard = ({
   video: {
     title,
     thumbnail,
     video,
+    $id,
     creator: { username, avatar },
   },
+  showIsSaveIcon = true,
 }) => {
   const [play, setPlay] = useState(false);
-  const [isShowMenu, setIsShowMenu] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const { user } = useGlobalContext();
 
-  const data = [
-    {
-      label: "Save",
-      id: "save",
-      icon: <FontAwesome name="bookmark" size={16} color="#FF9C01" />,
-    },
-    {
-      label: "Discard",
-      id: "discard",
-      icon: <FontAwesome name="remove" size={16} color="#FF9C01" />,
-    },
-  ];
+  checkPostAlreadySaved($id, user.$id).then((res) => setIsSaving(res));
+
+  console.log("isPostAlreadySaved videoid userid", $id, user.$id, isSaving);
+
+  const handleSavedPosts = async () => {
+    if (!isSaving) {
+      await savePost($id, user.$id);
+      Alert.alert("Success", "Post added to Bookmark");
+    } else {
+      await unSavePost($id, user.$id);
+      Alert.alert("Success", "Post removed from Bookmark");
+    }
+
+    setIsSaving((prevSaveState) => !prevSaveState);
+  };
 
   return (
     <View className="flex-col items-center px-4 mb-14 relative">
@@ -57,24 +64,17 @@ const VideoCard = ({
           </View>
         </View>
 
-        <View className="pt-2">
-          <TouchableOpacity onPress={() => setIsShowMenu(!isShowMenu)}>
-            <Image
-              source={icons.menu}
-              className="w-5 h-5"
-              resizeMode="contain"
-            />
-          </TouchableOpacity>
-          {isShowMenu && (
-            <CustomDropdown
-              isOpen={isShowMenu}
-              isOpenChange={setIsShowMenu}
-              data={data}
-              customStyles="absolute -left-28 z-10 w-28 rounded-lg bg-primary border border-secondary-100"
-              labelStyles="text-white"
-            />
-          )}
-        </View>
+        {showIsSaveIcon && (
+          <View className="pt-2">
+            <TouchableOpacity onPress={handleSavedPosts}>
+              <FontAwesome
+                name={`${isSaving ? "bookmark" : "bookmark-o"}`}
+                size={20}
+                color="#FF9C01"
+              />
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
 
       {play ? (

@@ -1,5 +1,5 @@
 import { View, Text, Image, RefreshControl, Alert } from "react-native";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FlatList } from "react-native";
 import { images } from "../../constants";
@@ -10,12 +10,23 @@ import { getAllPosts, getLatestPosts } from "../../lib/appwrite";
 import { useAppwrite } from "../../lib/useAppwrite";
 import VideoCard from "../../components/VideoCard";
 import { useGlobalContext } from "../../context/GlobalProvider";
+import { useFocusEffect } from "expo-router";
 
 const Home = () => {
   const { user } = useGlobalContext();
   const [refreshing, setRefreshing] = useState(false);
   const { data: posts, refetch } = useAppwrite(getAllPosts);
   const { data: latestPosts } = useAppwrite(getLatestPosts);
+
+  useFocusEffect(
+    useCallback(() => {
+      const performRefresh = async () => {
+        await refetch();
+      };
+
+      performRefresh();
+    }, [])
+  );
 
   const onRefresh = async () => {
     setRefreshing(true);
