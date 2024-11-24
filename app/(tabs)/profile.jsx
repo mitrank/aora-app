@@ -1,19 +1,51 @@
-import { View, Text, TouchableOpacity, Image } from "react-native";
-import React from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  RefreshControl,
+} from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FlatList } from "react-native";
 import EmptyState from "../../components/EmptyState";
-import { getUserPosts, performSignOut } from "../../lib/appwrite";
+import {
+  getNumberOfSaves,
+  getUserPosts,
+  performSignOut,
+} from "../../lib/appwrite";
 import { useAppwrite } from "../../lib/useAppwrite";
 import VideoCard from "../../components/VideoCard";
 import { useGlobalContext } from "../../context/GlobalProvider";
 import { icons } from "../../constants";
 import InfoBox from "../../components/InfoBox";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 
 const Profile = () => {
   const { user, setUser, setIsLoggedIn } = useGlobalContext();
   const { data: posts, refetch } = useAppwrite(() => getUserPosts(user.$id));
+  const [saves, setSaves] = useState(0);
+  const [refreshing, setRefreshing] = useState(false);
+
+  useEffect(() => {
+    getNumberOfSaves(user.$id).then((res) => setSaves(res));
+  }, [posts]);
+
+  useFocusEffect(
+    useCallback(() => {
+      const performRefresh = async () => {
+        await refetch();
+      };
+
+      performRefresh();
+    }, [posts])
+  );
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await refetch();
+    setRefreshing(false);
+  };
 
   const logoutUser = async () => {
     await performSignOut();
@@ -63,11 +95,7 @@ const Profile = () => {
                 containerStyles="mr-10"
                 titleStyles="text-xl"
               />
-              <InfoBox
-                title="1.2k"
-                subTitle="Followers"
-                titleStyles="text-xl"
-              />
+              <InfoBox title={saves} subTitle="Saves" titleStyles="text-xl" />
             </View>
           </View>
         )}
@@ -78,6 +106,9 @@ const Profile = () => {
             handlePressButtonRoute="/create"
           />
         )}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       />
     </SafeAreaView>
   );

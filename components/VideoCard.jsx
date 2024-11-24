@@ -22,8 +22,6 @@ const VideoCard = ({
 
   checkPostAlreadySaved($id, user.$id).then((res) => setIsSaving(res));
 
-  console.log("isPostAlreadySaved videoid userid", $id, user.$id, isSaving);
-
   const handleSavedPosts = async () => {
     if (!isSaving) {
       await savePost($id, user.$id);
