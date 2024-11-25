@@ -27,18 +27,21 @@ const Profile = () => {
   const [saves, setSaves] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
 
-  useEffect(() => {
-    getNumberOfSaves(user.$id).then((res) => setSaves(res));
-  }, [posts]);
-
   useFocusEffect(
     useCallback(() => {
+      if (!user) return;
+
       const performRefresh = async () => {
         await refetch();
       };
+      const getSaves = async () => {
+        const updatedSavesCount = await getNumberOfSaves(user.$id);
+        setSaves(updatedSavesCount);
+      };
 
       performRefresh();
-    }, [posts])
+      getSaves();
+    }, [])
   );
 
   const onRefresh = async () => {

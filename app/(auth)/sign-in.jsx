@@ -19,6 +19,7 @@ const SignIn = () => {
   const submitForm = async () => {
     if (!form.email || !form.password) {
       Alert.alert("Error", "Please fill in all the fields!");
+      return;
     }
     
     setIsSubmitting(true);
@@ -76,6 +77,7 @@ const SignIn = () => {
             handlePress={submitForm}
             containerStyles="mt-7"
             isLoading={isSubmitting}
+            
           />
 
           <View className="justify-center pt-5 flex-row gap-2">

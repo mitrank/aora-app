@@ -20,6 +20,8 @@ const VideoCard = ({
   const [isSaving, setIsSaving] = useState(false);
   const { user } = useGlobalContext();
 
+  if (!user) return;
+
   checkPostAlreadySaved($id, user.$id).then((res) => setIsSaving(res));
 
   const handleSavedPosts = async () => {
