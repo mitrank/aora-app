@@ -28,8 +28,20 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      [
+        "@sentry/react-native",
+        {
+          "url": "https://sentry.io/",
+          "project": "react-native",
+          "organization": "mitrank"
+        }
+      ],
+      "sentry-expo"
     ],
+    "updates": {
+      "enabled": true
+    },
     "experiments": {
       "typedRoutes": true
     },
