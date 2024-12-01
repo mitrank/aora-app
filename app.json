@@ -10,15 +10,15 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#161622"
     },
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/images/app_icon.png",
+        "backgroundColor": "#161622"
       },
       "package": "com.mitrank.Aora"
     },
@@ -28,16 +28,7 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-router",
-      [
-        "@sentry/react-native",
-        {
-          "url": "https://sentry.io/",
-          "project": "react-native",
-          "organization": "mitrank"
-        }
-      ],
-      "sentry-expo"
+      "expo-router"
     ],
     "updates": {
       "enabled": true
